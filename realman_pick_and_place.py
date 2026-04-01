@@ -46,10 +46,13 @@ class RealmanPickAndPlaceEnv(VecEnv):
     GRIPPER_MIN = 0.0
     GRIPPER_MAX = 0.04
 
-    # Genesis body indices for left/right finger (world=0, base_link=1, link1..6=2..7, hand=8,
+    # Genesis body indices (world=0, base_link=1, link1..6=2..7, hand=8,
     # left_finger=9, right_finger=10). Adjust if Genesis indexing differs.
     LEFT_LINK = 9
     RIGHT_LINK = 10
+    # Genesis body index for the cube entity (first entity added after the robot).
+    # Adjust if the scene entity order changes.
+    CUBE_LINK = 12
 
     def __init__(self, cfg: dict | object, num_envs=1, visible=False):
         self.device = gs.device
@@ -334,7 +337,7 @@ class RealmanPickAndPlaceEnv(VecEnv):
         link_a = contacts["link_a"]
 
         if object == self.cube:
-            link = torch.tensor([12], device=link_b.device).repeat(self.num_envs, 1)
+            link = torch.tensor([self.CUBE_LINK], device=link_b.device).repeat(self.num_envs, 1)
         elif object == self.plane:
             link = torch.tensor([0], device=link_b.device).repeat(self.num_envs, 1)
 
